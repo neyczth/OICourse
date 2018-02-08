@@ -1,0 +1,122 @@
+\documentclass{beamer}
+\usepackage{times}
+\usepackage{mathptmx}
+\usepackage[boldfont,slantfont]{xeCJK}
+\setmainfont{Times New Roman}
+\setsansfont{Times New Roman}
+\setCJKmainfont{黑体}
+\setCJKsansfont{黑体}
+\setCJKmonofont{仿宋}
+\setCJKfamilyfont{li}{隶书}
+\setCJKfamilyfont{xk}{华文行楷}
+\setCJKfamilyfont{xw}{华文新魏}
+\newcommand{\li}{\CJKfamily{li}}
+\newcommand{\xk}{\CJKfamily{xk}}
+\newcommand{\xw}{\CJKfamily{xw}}
+\usepackage{amsmath,amssymb,amsthm}
+\definecolor{cmykgreen000}{cmyk}{0.5,0,1,0.2}
+\usecolortheme[named=cmykgreen000]{structure}
+\usetheme{Copenhagen}
+\useoutertheme{miniframes}
+\usefonttheme[onlymath]{serif}
+\title{\xw NOIP提高班——数学专项练习讲评}
+\author{\li 东北育才学校\quad \xk 张听海}
+\AtBeginSection[]{
+    \begin{frame}
+        \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+    \end{frame}
+}
+\def\leq{\leqslant}
+\def\geq{\geqslant}
+\def\bkh{\!\!（}
+\def\ekh{）\!\!}
+\def\dou{，\!\!}
+\hypersetup{pdfpagemode={FullScreen}}
+\begin{document}
+    \renewcommand{\baselinestretch}{1.25}\normalsize
+    \setlength{\parindent}{0em}
+    \setlength{\abovedisplayskip}{1pt}
+    \setlength{\belowdisplayskip}{1pt}
+
+    \maketitle
+
+    \begin{frame}
+        \tableofcontents[hideothersubsections]
+    \end{frame}
+
+    \section{哈希函数}
+
+    \begin{frame}[shrink]
+        \frametitle{哈希函数}
+        \begin{block}
+
+            给定正整数$h$\dou 求有多少对非负整数$(x,y)$满足$h=xy+x+y$.\pause
+            
+            $T$组数据.\pause
+
+            $T\leq 10,000$\dou $h\leq {10}^8$.\pause
+        \end{block}
+
+        整理得$h+1=(x+1)(y+1)$. 即求$h+1$的正因子个数.\pause
+
+        欧拉筛预处理得到$1\sim {10}^4$之间的所有质数\dou 进而得到$h+1$的质因子分解式.\pause
+
+        如果用所有找到的质数试除之后$h>1$\dou 则剩下的$h$必为质数\bkh 即原$h$的最大质因子\ekh .\pause
+
+        注意到若$h+1=p_1^{\alpha_1}p_2^{\alpha_2}\cdots p_k^{\alpha_k}$\dou 则$h+1$的正因子个数为$(\alpha_1+1)(\alpha_2+1)\cdots(\alpha_k+1)$.
+    \end{frame}
+
+    \section{向量}
+
+    \begin{frame}[shrink]
+        \frametitle{向量}
+        \begin{block}
+
+            给你一对数$a,b$\dou 你可以任意使用$(a,b),(a,-b),(-a,b),(-a,-b),(b,a),(b,-a),(-b,a),(-b,-a)$这些向量\dou 问你能不能拼出另一个向量$(x,y)$.\pause
+
+            $T$组数据.\pause
+
+            $T\leq 50,000$\dou $-2\times {10}^9\leq a,b,x,y\leq 2\times {10}^9$.\pause
+        \end{block}
+
+        相当于有三种操作：\pause
+
+        $\bullet$给$x$或$y$加上或减去$2a$或$2b$.\pause
+
+        $\bullet$ {\ttfamily x=x+a,y=y+b}.\pause
+
+        $\bullet$ {\ttfamily x=x+b,y=y+a}.\pause
+
+        后两种操作可以使用0次或1次.\pause
+
+        枚举后两种操作是否使用\dou 之后用裴蜀定理判定能否拼成.
+    \end{frame}
+
+    \section{仪仗队}
+
+    \begin{frame}[shrink]
+        \frametitle{仪仗队}
+        \begin{block}
+
+            一个$N\times N$的方阵\dou 问从最后方的点能看到多少个点.\pause
+
+            $1\leq N\leq 40,000$.\pause
+        \end{block}
+
+        满足以下情形之一的点可被看到：\pause
+
+        $(1)$该点为$(0,1),(1,0),(1,1)$之一；\pause
+
+        $(2)$ $2\leq x,y\leq n-1$且$\gcd(x,y)=1$.\pause
+
+        所求即$\displaystyle 3+\sum_{i=2}^{n-1}\varphi(i)$.\pause
+
+        欧拉筛求欧拉函数\dou 求和.
+    \end{frame}
+
+    \section*{谢谢大家}
+
+    \begin{frame}
+        谢谢大家.
+    \end{frame}
+\end{document}

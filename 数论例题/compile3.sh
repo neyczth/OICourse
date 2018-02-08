@@ -1,0 +1,12 @@
+rm sllt.aux
+rm sllt.log
+rm sllt.out
+rm sllt.toc
+rm sllt.pdf
+xelatex sllt.tex
+xelatex sllt.tex
+xelatex sllt.tex
+rm sllt.aux
+rm sllt.log
+rm sllt.out
+rm sllt.toc

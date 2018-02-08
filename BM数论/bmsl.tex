@@ -1,0 +1,258 @@
+\documentclass[xcolor=dvipsnames]{beamer}
+\usepackage{times}
+\usepackage{mathptmx}
+\usepackage[boldfont,slantfont]{xeCJK}
+\setmainfont{Times New Roman}
+\setsansfont{Times New Roman}
+\setCJKmainfont{黑体}
+\setCJKsansfont{黑体}
+\setCJKmonofont{仿宋}
+\setCJKfamilyfont{li}{隶书}
+\setCJKfamilyfont{xk}{华文行楷}
+\setCJKfamilyfont{xw}{华文新魏}
+\newcommand{\li}{\CJKfamily{li}}
+\newcommand{\xk}{\CJKfamily{xk}}
+\newcommand{\xw}{\CJKfamily{xw}}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{listings}
+\lstset{language=C++,breaklines=true,extendedchars=false,numbers=left,basicstyle=\scriptsize\ttfamily,numberstyle=\scriptsize\ttfamily,tabsize=4,showstringspaces=false,escapechar=`,keywordstyle=\color{BrickRed},frame=shadowbox,rulesepcolor=\color{red!20!green!20!blue!20}}
+\definecolor{cmykgreen000}{cmyk}{0.5,0,1,0.2}
+\usecolortheme[named=cmykgreen000]{structure}
+\usetheme{Copenhagen}
+\useoutertheme{miniframes}
+\usefonttheme[onlymath]{serif}
+\title{\xw 算法竞赛中的数学问题——基础知识}
+\author{\li 东北育才学校\quad \xk 张听海}
+\AtBeginSection[]{
+    \begin{frame}[shrink]
+        \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+    \end{frame}
+}
+\AtBeginSubsection[]{
+    \begin{frame}[shrink]
+        \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+    \end{frame}
+}
+\def\leq{\leqslant}
+\def\geq{\geqslant}
+\def\byh{\!\!“}
+\def\eyh{”\!\!}
+\def\tcdots{\,\!\cdots\!\,}
+\def\dou{，\!\!}
+\hypersetup{pdfpagemode={FullScreen}}
+\begin{document}
+    \renewcommand{\baselinestretch}{1.25}\normalsize
+    \setlength{\parindent}{0em}
+    \setlength{\abovedisplayskip}{1pt}
+    \setlength{\belowdisplayskip}{1pt}
+
+    \maketitle
+
+    \begin{frame}[shrink]
+        \tableofcontents[hideothersubsections]
+    \end{frame}
+
+    \section{快速幂}
+
+    \subsection{快速幂}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{快速幂}
+
+        \begin{lstlisting}
+int ans=1;
+while(n){
+    if(n&1) ans=ans*x%p;
+    n>>=1;
+    x=x*x%p;
+}
+        \end{lstlisting}\pause
+
+        时间复杂度：\!\!$O(\log n)$.
+    \end{frame}
+
+    \section{素数筛法}
+
+    \subsection{朴素的素数判断}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{朴素的素数判断}
+
+        \begin{lstlisting}
+for(int i=2; i<=n; i++){
+    bool flag=1;
+    for(int j=2; j<=sqrt(i+0.5); j++)
+        if(i%j==0) flag=0;
+    ...
+}
+        \end{lstlisting}\pause
+
+        时间复杂度：\!\!$O\big(n\sqrt{n}\big)$.
+    \end{frame}
+
+    \subsection{Eratosthenes筛法}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{Eratosthenes筛法}
+
+        \begin{lstlisting}
+int m=sqrt(n+0.5);
+memset(vst,0,sizeof(vst));
+for(int i=2; i<=m; i++)
+    if(!vst[i])    `//`!vst[i]`表示`i`为素数`.
+        for(int j=i*i; j<=n; j+=i) vst[j]=1;
+        \end{lstlisting}\pause
+
+        特点：\!\!从质因子的角度考虑\dou 显然质因子的数目比正整数的数目少. 这样就大大降低了时间复杂度.\pause
+
+        时间复杂度：\!\!$O(n\log\log n)$.
+    \end{frame}
+
+    \subsection{线性筛法}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{线性筛法}
+
+        \begin{lstlisting}[basicstyle=\tiny\ttfamily,numberstyle=\tiny\ttfamily]
+bool check[MAXN]={0};
+int prime[MAXN]={0};
+int tot=0;
+for(int i=2; i<=N; i++){
+    if(!check[i]) prime[tot++]=i;
+    for(int j=0; j<tot&&i*prime[j]<=N; j++){
+        check[i*prime[j]]=1;
+        if(i%prime[j]==0) break;    `//关键在于理解此句`.
+    }
+}
+        \end{lstlisting}\pause
+
+        {\small 如果$p_j\mid i_0$\dou 那么对于$p_j$后的任意$p_k$\dou $p_j\mid i_0p_k$\dou 我们不妨让$i_0p_k$在$i=\dfrac{i_0p_k}{p_j}(>i_0)$时被$ip_j$筛掉. 这样就避免了重复筛掉同一个正整数. 事实上\dou 这样做之后\dou 每个正整数$i$都会被它的最小质因子筛掉.}
+    \end{frame}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{线性筛法拓展——求欧拉函数}
+
+        \begin{lstlisting}
+bool check[MAXN]={0};
+int prime[MAXN]={0};
+int tot=0;
+int phi[MAXN]={0};
+phi[1]=1;    `//不要忘记`.
+for(int i=2; i<=N; i++){
+    if(!check[i]){
+        prime[tot++]=i;
+        phi[i]=i-1;
+    }        
+    for(int j=0; j<tot&&i*prime[j]<=N; j++){
+        check[i*prime[j]]=1;
+        if(i%prime[j]==0){
+            phi[i*prime[j]]=phi[i]*prime[j];
+            break;
+        }
+        else phi[i*prime[j]]=phi[i]*(prime[j]-1);
+    }
+}
+        \end{lstlisting}
+    \end{frame}
+
+    \section{两个重要定理}
+
+    \subsection{费马小定理}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{费马小定理}
+
+        已知正整数$a$和质数$p$\dou 且$\gcd (a,p)=1$\dou 则$a^{p-1}\equiv 1\pmod{p}$.\pause
+
+        应用：\!\!结合快速幂求乘法逆元\dou 即$a$模$p$的乘法逆元为$a^{p-2}$.
+    \end{frame}
+
+    \subsection{欧拉定理}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{欧拉定理}
+
+        若正整数$a,n$互质\dou 则$a^{\varphi(n)}\equiv 1\pmod{n}$.\pause
+
+        广义欧拉定理：\!\!对于任何整数$x$和$n\geq\varphi(k)$\dou 则$$x^n\equiv x^{n\%\varphi(k)+\varphi(k)}\pmod{k}.$$
+    \end{frame}
+
+    \section{欧几里得算法}
+
+    \subsection{普通的欧几里得算法}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{普通的欧几里得算法}
+
+        \begin{lstlisting}
+int gcd(int a,int b){
+    if(b==0) return a;
+    else return gcd(b,a%b);
+}
+        \end{lstlisting}
+    \end{frame}
+
+    \subsection{拓展欧几里得算法}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{拓展欧几里得算法}
+        
+        裴蜀定理：\!\!若正整数$a,b$满足$\gcd(a,b)=d$\dou 则必存在整数$x,y$满足$ax+by=d$.\pause
+
+        特别地\dou 正整数$a,b$互质的充要条件为方程$$ax+by=1$$有整数解$(x,y)$.
+    \end{frame}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{拓展欧几里得算法}
+        \begin{lstlisting}[basicstyle=\tiny\ttfamily,numberstyle=\tiny\ttfamily]
+void gcd(int a,int b,int& d,int& x,int& y){
+    if(b==0) {d=a,x=1,y=0;}
+    else{
+        gcd(b,a%b,d,y,x);
+        y-=x*(a/b);    `//关键在于理解此句`.
+    }
+}
+        \end{lstlisting}\pause
+        
+        {\small 已知正整数$a,b$满足$\gcd(a,b)=d$\dou 且整数$x_0,y_0$满足$ax_0+by_0=d$.\pause
+
+        设$a/b=p,a\% b=r$\dou 这里\byh $/$\eyh 按计算机中的整除理解. 则有$(bp+r)x_0+by_0=d$\dou 整理得$rx_0+b(px_0+y_0)=d$.\pause
+
+        当从下一层递归中回到上一层时\dou 传回的参数为$x=x_0,y=px_0+y_0$. 而在上一层递归中我们想得到$x=x_0,y=y_0$\dou 因此需要{\ttfamily y-=x*(a/b)}.}
+    \end{frame}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{应用：\!\!求乘法逆元}
+
+        $(1)$乘法逆元：\!\!若$ab\equiv 1\pmod{p}$\dou 则$a,b$互为模$p$的乘法逆元.\pause
+
+        $(2)$在扩展欧几里得算法中取$b=p$\dou 得到的$x$即为$a$模$p$的乘法逆元.
+    \end{frame}
+
+    \section{三分法}
+
+    \subsection{三分法}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{三分法}
+
+        \begin{lstlisting}
+double f(double x);
+double solve(double l, double r){
+    double x1=l+(r-l)/3;
+    double x2=r-(r-l)/3;
+    if(fabs(x1-x2)<0.0001) return f(x1);
+    if(f(x1)>f(x2)) return solve(l,x2);
+    else return solve(x1,r);
+}
+        \end{lstlisting}
+    \end{frame}
+
+    \section*{谢谢大家}
+
+    \subsection*{谢谢大家}
+
+    \begin{frame}[fragile]
+        谢谢大家.
+    \end{frame}
+\end{document}

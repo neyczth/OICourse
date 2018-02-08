@@ -1,0 +1,16 @@
+rm csjp.aux
+rm csjp.log
+rm csjp.nav
+rm csjp.out
+rm csjp.snm
+rm csjp.toc
+rm csjp.pdf
+xelatex csjp.tex
+xelatex csjp.tex
+xelatex csjp.tex
+rm csjp.aux
+rm csjp.log
+rm csjp.nav
+rm csjp.out
+rm csjp.snm
+rm csjp.toc

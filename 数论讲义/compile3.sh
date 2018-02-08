@@ -1,0 +1,12 @@
+rm sljy.aux
+rm sljy.log
+rm sljy.out
+rm sljy.pdf
+rm sljy.toc
+xelatex sljy.tex
+xelatex sljy.tex
+xelatex sljy.tex
+rm sljy.aux
+rm sljy.log
+rm sljy.out
+rm sljy.toc

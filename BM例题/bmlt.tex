@@ -1,0 +1,194 @@
+\documentclass{beamer}
+\usepackage{times}
+\usepackage{mathptmx}
+\usepackage[boldfont,slantfont]{xeCJK}
+\setmainfont{Times New Roman}
+\setsansfont{Times New Roman}
+\setCJKmainfont{黑体}
+\setCJKsansfont{黑体}
+\setCJKmonofont{仿宋}
+\setCJKfamilyfont{li}{隶书}
+\setCJKfamilyfont{xk}{华文行楷}
+\setCJKfamilyfont{xw}{华文新魏}
+\newcommand{\li}{\CJKfamily{li}}
+\newcommand{\xk}{\CJKfamily{xk}}
+\newcommand{\xw}{\CJKfamily{xw}}
+\usepackage{amsmath,amssymb,amsthm}
+\definecolor{cmykgreen000}{cmyk}{0.5,0,1,0.2}
+\usecolortheme[named=cmykgreen000]{structure}
+\usetheme{Copenhagen}
+\useoutertheme{miniframes}
+\usefonttheme[onlymath]{serif}
+\title{\xw 算法竞赛中的数学问题——例题}
+\author{\li 东北育才学校\quad \xk 张听海}
+\AtBeginSection[]{
+    \begin{frame}[shrink]
+        \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+    \end{frame}
+}
+\AtBeginSubsection[]{
+    \begin{frame}[shrink]
+        \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+    \end{frame}
+}
+\def\tcdots{\,\!\cdots\!\,}
+\def\bkh{\!\!（}
+\def\ekh{）\!\!}
+\def\leq{\leqslant}
+\def\geq{\geqslant}
+\def\dou{，\!\!}
+\hypersetup{pdfpagemode={FullScreen}}
+\begin{document}
+    \renewcommand{\baselinestretch}{1.25}\normalsize
+    \setlength{\parindent}{0em}
+    \setlength{\abovedisplayskip}{1pt}
+    \setlength{\belowdisplayskip}{1pt}
+    
+    \maketitle
+
+    \begin{frame}[shrink]
+        \tableofcontents[hideothersubsections]
+    \end{frame}
+
+    \section{因数与倍数}
+
+    \subsection{例1. [UOJ48]核聚变反应强度}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{例1. [UOJ48]核聚变反应强度}
+
+        \begin{block}
+
+            给出$n$个正整数$a_1,a_2,\tcdots,a_n$\dou 计算$a_1$与每个$a_i$的次大公约数\bkh 能同时整除$x,y$的正整数中第二大的数\ekh\dou 如果没有输出$-1$.\pause
+
+            $n\leq {10}^5$\dou $a_i\leq {10}^{12}$.\pause
+        \end{block}
+
+        对于两个正整数$a_1$和$a_i$\dou 它们的公约数必为$\gcd(a_1,a_i)$的公约数. 即求$\gcd(a_1,a_i)$的次大公约数.\pause
+
+        欧拉筛预处理出质数数列.\pause
+
+        对于每个$a_i$\dou 欧几里得算法求出$\gcd(a_1,a_i)$\dou 之后从小到大用质数试除\dou 找到最小的$p\mid\gcd(a_1,a_i)$\dou 输出$\dfrac{\gcd(a_1,a_i)}{p}$.
+    \end{frame}
+
+    \subsection{例2. [POJ3696] The Luckiest Number}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{例2. [POJ3696] The Luckiest Number}
+        \begin{block}
+
+            对于给定的整数$L$\dou 找出$L$能整除最短的全8序列的长度.\pause
+
+            注：\!\!全8序列为形如$\underbrace{888\cdots 8}_{n\text{个}8}$.\pause
+
+            多组数据.\pause
+
+            $1\leq L\leq 2\times {10}^9$.\pause
+        \end{block}
+
+        $\underbrace{888\cdots 8}_{n\text{个}8}=\dfrac{8}{9}\big({10}^n-1\big)=L\cdot p$\dou 即${10}^x-1=\dfrac{9Lp}{8}$.\pause
+
+        设$m=\dfrac{9L}{\gcd(L,8)}$\dou 则存在$p'$使得${10}^x-1=mp'$\dou 即求${10}^x\equiv 1\pmod{m}$的最小解.\pause
+
+        当$\gcd(10,m)\neq 1$时\dou 无解.
+    \end{frame}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{例2. [POJ3696] The Luckiest Number}
+        当$\gcd(10,m)=1$时\dou 由于${10}^{\varphi(m)}\equiv 1\pmod{m}$\dou 只需考虑$\varphi(m)$的因子.\pause
+
+        对$\varphi(m)$质因数分解.\pause
+
+        对每个质因子$p_i$\dou 执行$n=n/p_i$直到以下情形之一被满足：
+        
+        $(1)$ $p_i\nmid n$；\!\!$(2)$ $x^n\not\equiv 1\pmod{m}$.\pause
+
+        考虑过全部质因子后即得解.
+    \end{frame}
+
+    \section{欧拉函数}
+
+    \subsection{例3. [BZOJ2818]Gcd}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{例3. [BZOJ2818]Gcd}
+        \begin{block}
+
+            给定整数$N$\dou 求$1\leq x,y\leq N$且$\gcd(x,y)$为素数的数对$(x,y)$有多少对？\pause
+
+            $1\leq N\leq {10}^7$.\pause
+        \end{block}
+
+        欧拉筛法预处理质数数列及$\varphi(n)$前缀和.\pause
+
+        题目等价于求$1\leq x,y\leq\bigg\lfloor\dfrac{N}{p}\bigg\rfloor$且$\gcd(x,y)=1$的数对的个数\dou 其中$p$为质数.
+    \end{frame}
+
+    \subsection{例4. [BZOJ3884]上帝与集合的正确用法}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{例4. [BZOJ3884]上帝与集合的正确用法}
+        \begin{block}
+
+            求$2^{2^{2^{2^{\cdots}}}}\bmod p$的值.\pause
+
+            $T$组数据.\pause
+
+            $T\leq 1,000$\dou $1\leq p\leq {10}^7$.\pause
+        \end{block}
+
+        欧拉筛预处理欧拉函数值.\pause
+
+        设$p=2^k\cdot q$\dou 其中$q$为奇数. 则$2^{2^{2^{2^{\cdots}}}}\bmod p=2^k\bigg(2^{2^{2^{2^{\cdots}}}-k}\bmod q\bigg)$.\pause
+
+        由欧拉定理$2^k\bigg(2^{2^{2^{2^{\cdots}}}-k}\bmod q\bigg)=2^k\bigg[2^{\big(2^{2^{2^{\cdots}}}-k\big)\bmod\varphi(q)}\bmod q\bigg]$.\pause
+
+        递归计算\dou 直至$q=1$.
+    \end{frame}
+
+    \subsection{例5. 离散对数问题}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{例5. 离散对数问题}
+        \begin{block}
+
+            已知$a,b,n$\dou 解同余方程$a^x\equiv b\pmod{n}$\dou 其中$\gcd(a,n)=1$.\pause
+        \end{block}
+
+        由欧拉定理\dou $a^x\equiv a^{x+\varphi(n)}\pmod{n}$. 因此只需枚举$0\leq x<\varphi(n)$.\pause
+        
+        分块优化. 设$x=p\big\lceil\varphi(n)\big\rceil-q$\dou 这里$0<p,q\leq\lceil\varphi(n)\big\rceil$.\pause
+
+        则$a^{p\lceil\varphi(n)\rceil-q}\equiv b\pmod{n}$等价于$a^{p\lceil\varphi(n)\rceil}\equiv b\cdot a^q\pmod{n}$.\pause
+
+        枚举$0<q\leq\lceil\varphi(n)\big\rceil$\dou 用hash表记录余数与$q$值的关系.\pause
+
+        再枚举$p$\dou 找到使$x$最小的$p,q$.\pause
+
+        以上算法也被称为大步小步法$($BSGS$)$.
+    \end{frame}
+
+    \section{三分法}
+
+    \subsection{例6. [BZOJ1857]传送带}
+
+    \begin{frame}[fragile,shrink]
+        \frametitle{例6. [BZOJ1857]传送带}
+        \begin{block}
+
+            在二维平面上有两个线段型传送带$AB$和$CD$\dou 小明在传送带$AB$上的速度为$P$\dou 在传送带$CD$上的速度为$Q$\dou 在平面其余位置的速度为$R$\dou 求小明从$A$走到$B$需要的最短时间.\pause
+
+            $1\leq P,Q,R\leq 10$\dou 各点坐标$\leq 1,000$.\pause
+        \end{block}
+
+        三分套三分.
+    \end{frame}
+
+    \section*{谢谢大家}
+
+    \subsection*{谢谢大家}
+    
+    \begin{frame}[fragile]
+        谢谢大家.
+    \end{frame}
+\end{document}
